@@ -1,0 +1,164 @@
+{% comment %}
+  Flexible footer with user‑controlled
+  • Column count (2 – 4)
+  • Themeable logo size, colours, typography
+  • Adjustable column widths via CSS vars
+{% endcomment %}
+
+{% assign col = section.settings.column_count %}
+{% assign logo_w = section.settings.logo_width %}
+
+<footer
+  class="site-footer"
+  style="
+    --footer-bg-top:    {{ section.settings.bg_top }};
+    --footer-bg-bottom: {{ section.settings.bg_bottom }};
+    --footer-text-col:  {{ section.settings.text_color }};
+    --footer-text-size: {{ section.settings.text_size }}px;
+    --footer-text-font: {{ section.settings.text_font }};
+    --footer-head-col:  {{ section.settings.heading_color }};
+    --footer-head-size: {{ section.settings.heading_size }}px;
+    --footer-logo:      {{ logo_w }}px;
+    --col1: {{ section.settings.col_w_1 | default: '1' }}fr;
+    --col2: {{ section.settings.col_w_2 | default: '1' }}fr;
+    --col3: {{ section.settings.col_w_3 | default: '1' }}fr;
+    --col4: {{ section.settings.col_w_4 | default: '1' }}fr;
+  "
+>
+  <!-- ================= FOOTER TOP ================= -->
+  <div class="footer-top footer-grid--{{ col }}">
+    <!-- Column 1 -->
+    <div class="footer-col">
+      {% if section.settings.logo %}
+        <img class="footer-logo" src="{{ section.settings.logo | img_url: '200x' }}" alt="{{ shop.name }}">
+      {% endif %}
+      <address class="footer-contact">
+        {% if section.settings.address != blank %}
+          <p><i class="fa-solid fa-location-dot"></i> {{ section.settings.address }}</p>
+        {% endif %}
+        {% if section.settings.phone != blank %}
+          <p><i class="fa-solid fa-phone"></i> {{ section.settings.phone }}</p>
+        {% endif %}
+        {% if section.settings.mobile != blank %}
+          <p><i class="fa-solid fa-mobile-screen-button"></i> {{ section.settings.mobile }}</p>
+        {% endif %}
+        {% if section.settings.email != blank %}
+          <p>
+            <i class="fa-solid fa-envelope"></i>
+            <a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a>
+          </p>
+        {% endif %}
+      </address>
+    </div>
+
+    <!-- Column 2 -->
+    {% if col == '2' or col == '3' or col == '4' %}
+      <div class="footer-col">
+        <h4>{{ section.settings.menu_title }}</h4>
+        {% assign menu = linklists[section.settings.footer_menu] %}
+        <ul class="footer-menu">
+          {% for link in menu.links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <!-- Column 3 -->
+    {% if col == '3' or col == '4' %}
+      <div class="footer-col">
+        <h4>{{ section.settings.news_title }}</h4>
+        <form action="{{ routes.customer_subscribe_url }}" method="post" class="newsletter-form">
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <input type="email" name="contact[email]" placeholder="Your email" required>
+          <button><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+      </div>
+    {% endif %}
+
+    <!-- Column 4 -->
+    {% if col == '4' %}
+      <div class="footer-col">
+        <h4>{{ section.settings.social_title }}</h4>
+        <div class="footer-socials">
+          {% if section.settings.facebook -%}
+            <a href="{{ section.settings.facebook }}"><i class="fa-brands fa-facebook-f"></i></a>
+          {%- endif %}
+          {% if section.settings.twitter -%}
+            <a href="{{ section.settings.twitter  }}"><i class="fa-brands fa-x-twitter"></i></a>
+          {%- endif %}
+          {% if section.settings.instagram -%}
+            <a href="{{ section.settings.instagram}}"><i class="fa-brands fa-instagram"></i></a>
+          {%- endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- ================= FOOTER BOTTOM ================= -->
+  <div class="footer-bottom">
+    <p>
+      &copy; {{ 'now' | date: '%Y' }}
+      {{ shop.name }}. All rights reserved.
+    </p>
+    {% if section.settings.show_payments %}
+      <div class="payment-icons">{{ payment_type_svg_tags }}</div>
+    {% endif %}
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer (flexible)",
+
+  "settings": [
+    /* Layout */
+    { "type": "select", "id": "column_count", "label": "Number of columns",
+      "options":[ { "value":"2","label":"Two" },{ "value":"3","label":"Three" },{ "value":"4","label":"Four" } ],
+      "default":"3" },
+
+    /* Logo + contact */
+    { "type":"image_picker","id":"logo","label":"Footer logo" },
+    { "type":"range","id":"logo_width","label":"Footer logo max‑width (px)","min":40,"max":300,"step":10,"default":160 },
+    { "type":"textarea","id":"address","label":"Address" },
+    { "type":"text","id":"phone","label":"Phone" },
+    { "type":"text","id":"mobile","label":"Mobile" },
+    { "type":"text","id":"email","label":"Email" },
+
+    /* Column 2 Menu */
+    { "type":"text","id":"menu_title","label":"Menu title","default":"Quick links" },
+    { "type":"link_list","id":"footer_menu","label":"Footer menu" },
+
+    /* Column 3 Newsletter */
+    { "type":"text","id":"news_title","label":"Newsletter title","default":"Subscribe" },
+
+    /* Column 4 Social */
+    { "type":"text","id":"social_title","label":"Social title","default":"Follow us" },
+    { "type":"url","id":"facebook","label":"Facebook URL" },
+    { "type":"url","id":"twitter","label":"Twitter/X URL" },
+    { "type":"url","id":"instagram","label":"Instagram URL" },
+
+    /* Appearance */
+    { "type":"color","id":"bg_top","label":"Top background","default":"#111827" },
+    { "type":"color","id":"bg_bottom","label":"Bottom background","default":"#0f172a" },
+    { "type":"color","id":"text_color","label":"Text colour","default":"#e5e7eb" },
+    { "type":"range","id":"text_size","label":"Text size (px)","min":12,"max":20,"step":1,"default":14 },
+    { "type":"text","id":"text_font","label":"Text font‑family","default":"'Segoe UI', Arial, sans-serif" },
+    { "type":"color","id":"heading_color","label":"Heading colour","default":"#ffffff" },
+    { "type":"range","id":"heading_size","label":"Heading size (px)","min":14,"max":24,"step":1,"default":16 },
+
+    /* Column width sliders */
+    { "type":"range","id":"col_w_1","label":"Column 1 width (fr)","min":1,"max":4,"step":0.5,"default":1 },
+    { "type":"range","id":"col_w_2","label":"Column 2 width (fr)","min":1,"max":4,"step":0.5,"default":1 },
+    { "type":"range","id":"col_w_3","label":"Column 3 width (fr)","min":1,"max":4,"step":0.5,"default":1 },
+    { "type":"range","id":"col_w_4","label":"Column 4 width (fr)","min":1,"max":4,"step":0.5,"default":1 },
+
+    /* Bottom */
+    { "type":"checkbox","id":"show_payments","label":"Show payment icons","default":true }
+  ],
+
+  "presets":[{ "name":"Footer (flexible)" }]
+}
+{% endschema %}

@@ -1,0 +1,29 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    {% comment %}
+      This is a valid comment in Shopify Liquid.
+    {% endcomment %}
+
+    {{ content_for_header }}
+
+    <link rel="preconnect" href="https://cdn.shopify.com">
+    <link href="{{ 'theme.css' | asset_url }}" rel="stylesheet">
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  </head>
+
+  <body>
+    {% section 'header' %}
+
+    <main id="main" role="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% section 'footer' %}
+
+    {{ content_for_footer }}
+  </body>
+</html>

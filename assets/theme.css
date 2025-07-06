@@ -1,0 +1,141 @@
+/* ===== Global variables ===== */
+:root{
+  --primary:#111827;--accent:#2563eb;--text:#374151;--bg:#ffffff;
+}
+
+/* ===== Generic ===== */
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg)}
+a{text-decoration:none;color:var(--text);transition:color .2s}
+a:hover{color:var(--accent)}
+
+/* ===== Announcement ===== */
+.announcement-bar{background:var(--accent);color:#fff;padding:.5rem 1rem;font-size:.875rem;text-align:center}
+
+/* ===== Header Layout ===== */
+.site-header{background:var(--header-bg);color:var(--header-text);border-bottom:1px solid #e5e7eb}
+.header-inner{max-width:var(--header-max);margin:0 auto;width:100%}
+.header-wrapper--flex{display:flex;align-items:center;gap:1rem}
+.header-inner--grid .header-wrapper--grid{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1rem}
+.logo img{width:100%;height:auto;display:block}
+.site-header {
+  padding-top: var(--header-pt);
+  padding-bottom: var(--header-pb);
+}
+
+
+
+/* responsive logo positions */
+.logo--left{order:0;margin-right:auto}
+.logo--center{order:0;margin-left:auto;margin-right:auto}
+.logo--right{order:0;margin-left:auto}
+
+/* ===== Navigation ===== */
+.main-nav a{margin:0 .75rem;font-weight:500;color:var(--menu-text);font-size:var(--menu-size);font-family:var(--menu-font)}
+.main-nav a:hover{color:var(--accent)}
+.main-nav--left{order:-1;margin-right:auto}
+.main-nav--middle{order:0;margin-left:auto;margin-right:auto}
+.main-nav--right{order:1;margin-left:auto}
+.main-nav--top,.main-nav--bottom{text-align:center;padding:.5rem 0}
+
+/* ===== Icon Buttons ===== */
+.icon-btn{background:none;border:none;font-size:1.25rem;cursor:pointer;color:var(--icon-color);display:flex;align-items:center}
+.icon-btn i{pointer-events:none;color:inherit}
+.header-icons{display:flex;align-items:center;gap:1rem}
+.cart-link{position:relative}
+.cart-count{background:var(--accent);color:#fff;border-radius:9999px;padding:0 .45em;font-size:.75rem;position:absolute;top:-.4em;right:-.6em}
+
+/* ===== Mobile Nav ===== */
+.mobile-nav{display:none;flex-direction:column;background:var(--bg);border-top:1px solid #e5e7eb}
+.mobile-nav a{padding:1rem 2rem}
+.mobile-nav.open{display:flex}
+.mobile-nav-toggle{font-size:1.5rem;display:none;color:var(--icon-color);background:none;border:none}
+
+/* Breakpoints */
+@media(max-width:768px){
+  .mobile-nav-toggle{display:inline-block}
+  .main-nav--left,.main-nav--middle,.main-nav--right{display:none}
+}
+@media(max-width:480px){
+  .header-wrapper--flex,.header-wrapper--grid{gap:.5rem;padding:.5rem 1rem}
+  .main-nav a{margin:0 .4rem}
+  .icon-btn{font-size:1.125rem}
+}
+
+/* ===== Search Overlay ===== */
+.search-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:50}
+.search-overlay.open{display:flex}
+.search-overlay__inner{background:#fff;padding:2rem;border-radius:.5rem;width:90%;max-width:500px}
+.search-overlay input{width:100%;padding:.75rem 1rem;font-size:1rem;border:1px solid #d1d5db;border-radius:.375rem}
+
+/* ===== Home Search ===== */
+.home-search__form{display:flex;align-items:center;gap:.5rem}
+.home-search__form input{flex:1;padding:.6rem .8rem;border:1px solid #d1d5db;border-radius:.375rem;font-size:1rem}
+.home-search .icon-btn{font-size:1.25rem}
+.logo {
+  max-width: var(--logo-width-desktop);
+}
+@media (max-width: 768px) {
+  .logo {
+    max-width: var(--logo-width-mobile);
+  }
+}
+
+/* ========== FOOTER ========== */
+.site-footer   { background:#111827; color:#e5e7eb; font-size:.875rem; }
+.footer-top    { display:grid; gap:2rem; padding:3rem 1.5rem; }
+.footer-grid--2{ grid-template-columns:repeat(2,1fr); }
+.footer-grid--3{ grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); }
+.footer-grid--4{ grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); }
+
+.footer-col h4     { margin-bottom:.75rem; font-size:1rem; color:#fff; }
+.footer-logo       { max-width:160px; margin-bottom:1rem; }
+.footer-contact p,
+.footer-menu li    { margin:.25rem 0; }
+.footer-menu       { list-style:none; padding:0; }
+.footer-menu a     { color:#e5e7eb; }
+.footer-menu a:hover{ color:#38bdf8; }
+
+.newsletter-form   { display:flex; gap:.5rem; }
+.newsletter-form input{ flex:1; padding:.5rem .75rem; border:none; border-radius:.375rem 0 0 .375rem; }
+.newsletter-form button{ padding:.5rem .9rem; background:#38bdf8; border:none; border-radius:0 .375rem .375rem 0; color:#fff; cursor:pointer; }
+.newsletter-form button:hover{ background:#0ea5e9; }
+
+.footer-socials a  { margin-right:.75rem; font-size:1.25rem; color:#e5e7eb; }
+.footer-socials a:hover{ color:#38bdf8; }
+
+.footer-bottom  { border-top:1px solid rgba(255,255,255,.1); padding:1rem 1.5rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+.payment-icons svg{ height:26px; margin-left:.75rem; fill:#e5e7eb; }
+/* === Footer Theming === */
+.site-footer{font-family:var(--footer-text-font);font-size:var(--footer-text-size);color:var(--footer-text-col)}
+.footer-top{background:var(--footer-bg-top)}
+.footer-bottom{background:var(--footer-bg-bottom)}
+.footer-logo{max-width:var(--footer-logo);margin-bottom:1rem}
+.footer-col h4{color:var(--footer-head-col);font-size:var(--footer-head-size);margin-bottom:.75rem}
+.footer-grid--2{grid-template-columns:var(--col1) var(--col2)}
+.footer-grid--3{grid-template-columns:var(--col1) var(--col2) var(--col3)}
+.footer-grid--4{grid-template-columns:var(--col1) var(--col2) var(--col3) var(--col4)}
+/* ========== Responsive footer ========== */
+
+/* ▼ Tablet (≤ 768 px): force two columns max */
+@media (max-width: 768px) {
+  .footer-grid--4,
+  .footer-grid--3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ▼ Mobile (≤ 480 px): single‑column stack */
+@media (max-width: 480px) {
+  .footer-grid--4,
+  .footer-grid--3,
+  .footer-grid--2 {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-top { padding: 2rem 1rem; gap: 1.5rem; }
+  .footer-col h4 { margin-bottom: .5rem; }
+  .newsletter-form { flex-direction: column; }
+  .newsletter-form input { border-radius: .375rem; margin-bottom: .5rem; }
+  .newsletter-form button { border-radius: .375rem; width: 100%; }
+}

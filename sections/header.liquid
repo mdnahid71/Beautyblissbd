@@ -1,0 +1,220 @@
+{% comment %}
+  Flexible header (grid / flex) with Font‑Awesome icons and icon‑colour picker.
+{% endcomment %}
+
+<!-- Load Font‑Awesome -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  integrity="sha512-gKx5X2I0+SN+..."
+  referrerpolicy="no-referrer"
+>
+
+{% assign logo_w = section.settings.logo_width %}
+{% assign logo_w_mobile = section.settings.logo_width_mobile %}
+{% assign logo_pos = section.settings.logo_position %}
+{% assign menu_pos = section.settings.menu_position %}
+{% assign container = section.settings.header_container_width %}
+{% assign header_layout = section.settings.header_layout %}
+
+{%- capture nav -%}
+  {% if section.settings.main_menu != blank %}
+    <nav class="main-nav main-nav--{{ menu_pos }}">
+      {% for link in linklists[section.settings.main_menu].links %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+  {% endif %}
+{%- endcapture -%}
+
+{%- case container -%}
+  {%- when 'full' -%}
+    {% assign max = '100%' %}
+  {%- when '1200' -%}
+    {% assign max = '1200px' %}
+  {%- when '1400' -%}
+    {% assign max = '1400px' %}
+  {%- when '1600' -%}
+    {% assign max = '1600px' %}
+{%- endcase -%}
+
+<header
+  class="site-header"
+  style="
+    --header-bg:   {{ section.settings.header_bg_color }};
+    --header-text: {{ section.settings.header_text_color }};
+    --menu-text:   {{ section.settings.menu_text_color }};
+    --menu-font:   {{ section.settings.menu_font_family }};
+    --icon-color:  {{ section.settings.icon_color }};
+    --header-h:    {{ section.settings.header_height }}px;
+    --menu-size:   {{ section.settings.menu_font_size }}px;
+    --header-max:  {{ max }};
+  "
+>
+  {% if section.settings.show_announcement and section.settings.announcement_text != blank %}
+    <div class="announcement-bar">{{ section.settings.announcement_text }}</div>
+  {% endif %}
+
+  <div class="header-inner header-inner--{{ header_layout }}">
+    {% if logo_pos == 'top' %}
+      <div class="logo logo--top" style="max-width:{{ logo_w }}px;">
+        {% if section.settings.logo != blank %}
+          <a href="{{ routes.root_url }}">
+            <img
+              src="{{ section.settings.logo | img_url: '400x' }}"
+              width="{{ logo_w }}"
+              alt="{{ shop.name | escape }}"
+            >
+          </a>
+        {% else %}
+          <a href="{{ routes.root_url }}">{{ section.settings.logo_text }}</a>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="header-wrapper header-wrapper--{{ header_layout }}">
+      {% if logo_pos != 'top' %}
+        <div
+          class="logo logo--{{ logo_pos }}"
+          style="--logo-width-desktop:{{ logo_w }}px; --logo-width-mobile:{{ logo_w_mobile }}px;"
+        >
+          {% if section.settings.logo != blank %}
+            <a href="{{ routes.root_url }}">
+              <img
+                src="{{ section.settings.logo | img_url: '400x' }}"
+                width="{{ logo_w }}"
+                alt="{{ shop.name | escape }}"
+              >
+            </a>
+          {% else %}
+            <a href="{{ routes.root_url }}">{{ section.settings.logo_text }}</a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if menu_pos == 'left' or menu_pos == 'middle' %}{{ nav }}{% endif %}
+
+      <div class="header-icons">
+        {% if section.settings.show_search %}
+          {% if section.settings.search_inline %}
+            <a href="/collections/all" class="icon-btn" aria-label="All Products">
+              <i class="{{ section.settings.icon_search_v2 }}"></i>
+            </a>
+          {% else %}
+            <button id="search-toggle" class="icon-btn" aria-label="Search">
+              <i class="{{ section.settings.icon_search_v2 }}"></i>
+            </button>
+          {% endif %}
+        {% endif %}
+
+        {% if section.settings.show_account and shop.customer_accounts_enabled %}
+          {% if customer %}
+            <a href="{{ routes.account_url }}" class="icon-btn" aria-label="Account">
+              <i class="{{ section.settings.icon_account_v2 }}"></i>
+            </a>
+            <a href="{{ routes.account_logout_url }}" class="icon-btn" aria-label="Logout">
+              <i class="{{ section.settings.icon_logout_v2 }}"></i>
+            </a>
+          {% else %}
+            <a href="{{ routes.account_login_url }}" class="icon-btn" aria-label="Login">
+              <i class="{{ section.settings.icon_account_v2 }}"></i>
+            </a>
+          {% endif %}
+        {% endif %}
+
+        {% if section.settings.show_cart %}
+          <a href="{{ routes.cart_url }}" class="icon-btn cart-link" aria-label="Cart">
+            <i class="{{ section.settings.icon_cart_v2 }}"></i>
+            {% if cart.item_count > 0 %}
+              <span class="cart-count">{{ cart.item_count }}</span>
+            {% endif %}
+          </a>
+        {% endif %}
+
+        <button class="mobile-nav-toggle" aria-controls="mobile-nav" aria-label="Toggle Navigation">☰</button>
+      </div>
+
+      {% if menu_pos == 'right' %}{{ nav }}{% endif %}
+    </div>
+
+    {% if menu_pos == 'top' or menu_pos == 'bottom' %}{{ nav }}{% endif %}
+
+    <!-- Mobile Navigation -->
+    <nav id="mobile-nav" class="mobile-nav">
+      {% for link in linklists[section.settings.main_menu].links %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+
+  {% if section.settings.show_search and section.settings.search_inline == false %}
+    <div id="search-overlay" class="search-overlay">
+      <div class="search-overlay__inner">
+        <form action="{{ routes.search_url }}" method="get" role="search">
+          <input type="search" name="q" placeholder="Search…" aria-label="Search">
+        </form>
+        <button id="search-close" class="icon-btn" aria-label="Close">✕</button>
+      </div>
+    </div>
+  {% endif %}
+</header>
+
+{% schema %}
+{
+  "name": "Header (flexible)",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo image" },
+    { "type": "text", "id": "logo_text", "label": "Logo text", "default": "Brand" },
+
+    { "type": "range", "id": "logo_width", "label": "Logo max width (px)", "min": 40, "max": 400, "step": 10, "default": 120 },
+    { "type": "range", "id": "logo_width_mobile", "label": "Mobile logo max width (px)", "min": 30, "max": 300, "step": 10, "default": 100 },
+    { "type": "range", "id": "header_height", "label": "Header height (px)", "min": 40, "max": 200, "step": 2, "default": 72 },
+    { "type": "range", "id": "menu_font_size", "label": "Menu text size (px)", "min": 12, "max": 28, "step": 1, "default": 16 },
+    { "type": "text",  "id": "menu_font_family", "label": "Menu font family", "default": "'Segoe UI', Arial, sans-serif" },
+
+    { "type": "range", "id": "header_padding_top", "label": "Header top padding (px)", "min": 0, "max": 100, "step": 5, "default": 20 },
+    { "type": "range", "id": "header_padding_bottom", "label": "Header bottom padding (px)", "min": 0, "max": 100, "step": 5, "default": 20 },
+    { "type": "range", "id": "menu_padding", "label": "Menu item padding (px)", "min": 0, "max": 40, "step": 2, "default": 12 },
+    { "type": "range", "id": "icon_padding", "label": "Icon button padding (px)", "min": 0, "max": 30, "step": 2, "default": 8 },
+
+
+    { "type": "select", "id": "header_layout", "label": "Header layout", "options": [
+        { "value": "flex", "label": "Flex" }, { "value": "grid", "label": "Grid" } ], "default": "flex" },
+
+    { "type": "select", "id": "header_container_width", "label": "Header width", "options": [
+        { "value": "full", "label": "Full" }, { "value": "1200", "label": "1200 px" },
+        { "value": "1400", "label": "1400 px" }, { "value": "1600", "label": "1600 px" } ], "default": "full" },
+
+    { "type": "select", "id": "logo_position", "label": "Logo position", "options": [
+        { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }, { "value": "top", "label": "Top" } ], "default": "left" },
+
+    { "type": "link_list", "id": "main_menu", "label": "Main menu" },
+
+    { "type": "select", "id": "menu_position", "label": "Menu position", "options": [
+        { "value": "left", "label": "Left" }, { "value": "middle", "label": "Middle" },
+        { "value": "right", "label": "Right" }, { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" } ], "default": "right" },
+
+    { "type": "checkbox", "id": "show_search",  "label": "Show search icon", "default": true },
+    { "type": "checkbox", "id": "search_inline", "label": "Inline search link (icon → All Products)", "default": true },
+
+    { "type": "checkbox", "id": "show_account", "label": "Show login/account", "default": true },
+    { "type": "checkbox", "id": "show_cart",    "label": "Show cart icon",    "default": true },
+
+    { "type": "text", "id": "icon_search_v2", "label": "Font-Awesome Search icon name", "default": "fa-solid fa-magnifying-glass" },
+    { "type": "text", "id": "icon_account_v2", "label": "Font-Awesome Login icon name",   "default": "fa-solid fa-user" },
+    { "type": "text", "id": "icon_logout_v2",  "label": "Font-Awesome Logout icon name",  "default": "fa-solid fa-arrow-right-from-bracket" },
+    { "type": "text", "id": "icon_cart_v2",    "label": "Font-Awesome Cart icon name",    "default": "fa-solid fa-cart-shopping" },
+
+    { "type": "color", "id": "icon_color",       "label": "Icon colour",        "default": "#2563eb" },
+    { "type": "checkbox", "id": "show_announcement", "label": "Show announcement bar", "default": false },
+    { "type": "text", "id": "announcement_text", "label": "Announcement text", "default": "Welcome to our store!" },
+
+    { "type": "color", "id": "header_bg_color",   "label": "Header background", "default": "#ffffff" },
+    { "type": "color", "id": "header_text_color", "label": "Header text colour", "default": "#000000" },
+    { "type": "color", "id": "menu_text_color",   "label": "Menu text colour",   "default": "#111827" }
+  ],
+  "presets":[{"name":"Header (flexible)"}]
+}
+{% endschema %}

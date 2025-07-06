@@ -1,0 +1,16 @@
+{% layout none %}
+{% if search.results_count > 0 %}
+  <h1>Search results ({{ search.results_count }})</h1>
+  <ul class="search-results">
+    {% for item in search.results %}
+      <li>
+        <a href="{{ item.url }}">{{ item.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="no-results-msg">
+    Sorry, we couldn’t find that product.<br>
+    <a href="/collections/all">Browse all products</a>
+  </p>
+{% endif %}

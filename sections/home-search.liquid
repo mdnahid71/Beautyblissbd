@@ -1,0 +1,25 @@
+<section
+  class="home-search"
+  style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding }}px 1rem;"
+>
+  <form action="{{ routes.search_url }}" method="get" role="search" class="home-search__form">
+    <input type="search" name="q" placeholder="{{ section.settings.placeholder }}" aria-label="Search products">
+    <button class="icon-btn" aria-label="Search" style="color: {{ section.settings.icon_color }};">
+      <i class="{{ section.settings.icon_search }}"></i>
+    </button>
+  </form>
+</section>
+
+{% schema %}
+{
+  "name":"Search bar (home)",
+  "settings":[
+    { "type":"text","id":"placeholder","label":"Placeholder","default":"Search products…" },
+    { "type":"text","id":"icon_search","label":"Search icon (class)","default":"fa-solid fa-magnifying-glass" },
+    { "type":"color","id":"icon_color","label":"Icon colour","default":"#2563eb" },
+    { "type":"color","id":"bg_color","label":"Background colour","default":"#f9fafb" },
+    { "type":"range","id":"padding","label":"Vertical padding (px)","min":20,"max":120,"step":4,"default":60 }
+  ],
+  "presets":[{"name":"Search bar (home)"}]
+}
+{% endschema %}
